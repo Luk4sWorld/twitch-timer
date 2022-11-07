@@ -3,10 +3,10 @@
   <head>
     <style type="text/css">
       .timer {
-        /*font-family: "Comic Sans";*/
         color: #F0F0F0;
-        /*font-family: Lucida Handwriting, Comic Sans MS, sans-serif;
-        font-size: 40px;*/
+        font-family: Comic Sans MS, sans-serif;
+        font-size: 40px;
+        text-align: center;
       }
     </style>
     <!--script src="https://github.com/tmijs/tmi.js/releases/download/v1.8.5/tmi.min.js"></script-->
@@ -52,6 +52,7 @@
       console.log("parsed settings:",d);
       if(d.font) text.style.fontFamily = d.font;
       if(d.size) text.style.fontSize = d.size;
+      if(d.color) text.style.color = d.color;
       const command = d.command;
       client = new tmi.Client({channels:[d.channel]});
       client.on('chat',(channel, tags, msg, self) => {
@@ -72,7 +73,7 @@
     window.onload = load;
     </script>
   </head>
-  <body style="background:#303030">
+  <body>
     <div>
       <text id=text class="timer"></text>
     </div>

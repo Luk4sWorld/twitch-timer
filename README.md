@@ -11,7 +11,8 @@ current settings supported:
 * command: the string it shall search for to reset the timer
 * font: the font family for the text (be ware of URI encoding, hash string will try to decode)
 * size: the font size (a CSS compatible value like "40px")
+* color: the font color (a CSS compatible value like "red" or "#88FF30")
 
 ## example
-(WIP)  
-`Luk4sWorld.github.io/twitch-timer/index.html#channel=Luk4sWorld&command=!reset&font=Comic%20Sans%20MS&size=40px`  
+  
+`https://Luk4sWorld.github.io/twitch-timer/index.html#channel=Luk4sWorld&command=!reset&font=Comic%20Sans%20MS&size=40px&color=#F0F0F0`  
