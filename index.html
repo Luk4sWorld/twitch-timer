@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style type="text/css">
+      .timer {
+        /*font-family: "Comic Sans";*/
+        color: #F0F0F0;
+        /*font-family: Lucida Handwriting, Comic Sans MS, sans-serif;
+        font-size: 40px;*/
+      }
+    </style>
+    <!--script src="https://github.com/tmijs/tmi.js/releases/download/v1.8.5/tmi.min.js"></script-->
+    <script src="tmi.min.js"></script>
+    <script>
+    var text;
+    var timeValue;
+    var counterTimeout;
+    var client;
+    function zeroFill(n,l) {
+      s = n.toString();
+      return ("0").repeat(Math.max(0,l-s.length)) + s;
+    }
+    function formatTime(t) {
+      const h = Math.floor(t/3600);
+      const m = Math.floor((t%3600)/60);
+      const s = t%60;
+      return `${zeroFill(h,2)}:${zeroFill(m,2)}:${zeroFill(s,2)}`;
+    }
+    function startCountdown() {
+      timeValue = 0;
+      text.innerHTML = formatTime(timeValue++);
+      function nextTimeout() {
+        text.innerHTML = formatTime(timeValue++);
+      }
+      counterInterval = setInterval(nextTimeout,1000);
+    }
+    function load(){
+      text = document.getElementById("text");
+      const d = {};
+      try {
+        const h = decodeURI(document.location.hash.substring(1));
+        console.log("decoded settings string:",h);
+        for(const e of h.split('&')) {
+          const [k, v] = e.split('=');
+          d[k] = v;
+        }
+      } catch(e) {
+        text.innerHTML = "ERR";
+        console.err(e);
+        return;
+      }
+      console.log("parsed settings:",d);
+      if(d.font) text.style.fontFamily = d.font;
+      if(d.size) text.style.fontSize = d.size;
+      const command = d.command;
+      client = new tmi.Client({channels:[d.channel]});
+      client.on('chat',(channel, tags, msg, self) => {
+        if(self) return; // will never be true but better safe than sorry.
+        //if(msg == command) {  // force exact match
+        if(msg.startsWith(command)) {  // fuzzy logic
+          timeValue = 0;
+          console.log(`Chatter "${tags.username}" reset the timer.`);
+        }
+      });
+      client
+        .connect()
+        //.then(()=>client.join(channel))
+        //.then(startCountdown);
+        .catch(console.err);
+      startCountdown();
+    }
+    window.onload = load;
+    </script>
+  </head>
+  <body style="background:#303030">
+    <div>
+      <text id=text class="timer"></text>
+    </div>
+  </body>
+</html>
